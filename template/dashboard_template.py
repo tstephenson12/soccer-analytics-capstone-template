@@ -452,7 +452,8 @@ app.layout = html.Div(
                                             .update_layout(
                                                 template=plotly_template,
                                                 showlegend=False,
-                                                margin=dict(l=20, r=20, t=40, b=20),
+                                                margin=dict(l=60, r=20, t=40, b=100),
+                                                xaxis_tickangle=-45,
                                             )
                                             .update_traces(
                                                 marker=dict(
@@ -531,7 +532,9 @@ app.layout = html.Div(
                                             .update_layout(
                                                 template=plotly_template,
                                                 showlegend=False,
-                                                margin=dict(l=20, r=20, t=40, b=20),
+                                                margin=dict(l=60, r=20, t=40, b=70),
+                                                xaxis=dict(automargin=True),
+                                                yaxis=dict(automargin=True),
                                             )
                                             .update_traces(
                                                 marker=dict(
@@ -751,7 +754,12 @@ def update_goals_chart(competition, season, team):
     fig.update_layout(
         template=plotly_template,
         showlegend=False,
-        margin=dict(l=20, r=20, t=40, b=20),
+        margin=dict(l=60, r=80, t=40, b=180),
+        xaxis_tickangle=-45,
+        xaxis=dict(
+            tickmode='linear',
+            automargin=True,
+        ),
     )
 
     return fig
