@@ -7,8 +7,8 @@ project_location = 'C:/Users/Tyler/Documents/GitHub/soccer-analytics-capstone-te
 duckdb.sql(f"""
                             SELECT initial_types.*,
                                CASE 
-                               WHEN UPPER(POSITION_TYPE_ALT) IN ('WB', 'B') THEN 'D'
-                               WHEN UPPER(POSITION_TYPE_ALT) IN ('F', 'W') THEN 'F'
+                               WHEN UPPER(POSITION_TYPE_ALT) IN ('WB', 'B') THEN 'B'
+                               WHEN UPPER(POSITION_TYPE_ALT) IN ('F', 'W', 'CF') THEN 'F'
                                 WHEN UPPER(POSITION_TYPE_ALT) IN ('GK') THEN 'GK'
                                WHEN UPPER(POSITION_TYPE_ALT) IN ('M') THEN 'M'
                                ELSE NULL
@@ -29,17 +29,18 @@ duckdb.sql(f"""
                                WHEN UPPER(position_name) LIKE '%MID%' THEN 'M'
                                WHEN UPPER(position_name) LIKE '%WING BACK%' THEN 'WB'
                                WHEN UPPER(position_name) LIKE '%BACK%' THEN 'B'
-                               WHEN UPPER(position_name) LIKE '%FORWARD%' THEN 'F'
+                               WHEN UPPER(position_name) LIKE '%CENTER FORWARD%' THEN 'CF'
                                WHEN UPPER(position_name) LIKE '%GOALKEEPER%' THEN 'GK'
                                WHEN UPPER(position_name) LIKE '%WING%' THEN 'W'
-                               WHEN UPPER(position_name) LIKE '%STRIKER%' THEN 'F'
+                               WHEN UPPER(position_name) LIKE '%FORWARD%' THEN 'F'
                                ELSE NULL
                                END AS POSITION_TYPE_ALT,
                                CASE 
                                WHEN UPPER(position_name) LIKE '%ATTACK%' THEN 'A'
                                WHEN UPPER(position_name) LIKE '%DEFENSIVE%' THEN 'D'
                                ELSE NULL
-                               END AS POSITION_BEHAVIOR
+                               END AS POSITION_BEHAVIOR,
+                              RANK () OVER (ORDER BY POSITION_NAME) POSITION_TYPE_PK
                             FROM (
                                SELECT distinct position_name
                                 FROM read_parquet('{project_location}/Statsbomb/lineups.parquet') 
